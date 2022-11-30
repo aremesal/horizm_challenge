@@ -175,6 +175,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+
+        App\Providers\RepositoryServiceProvider::class,
+
     ],
 
     /*
@@ -231,5 +234,9 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 
     ],
+
+    // Horizm config
+    'max_posts' => env('HORIZM_MAX_POSTS', 50),
+    'json_posts_url' => env('HORIZM_POSTS_URL', 'https://jsonplaceholder.typicode.com/posts'),
 
 ];
