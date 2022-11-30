@@ -13,6 +13,8 @@ use Tests\TestCase;
 
 class GetPostsTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * Tests controller retrieving 50 posts from source.
      *
@@ -33,7 +35,7 @@ class GetPostsTest extends TestCase
 
         // Mock json call - I don't care if the source is online or not
         $jsonHelper = \Mockery::mock(JsonHelper::class);
-        $jsonHelper->shouldReceive('getJsonFromSource')
+        $jsonHelper->shouldReceive('getJsonPostsFromSource')
             ->andReturn($posts_from_json);
         $this->app->instance(JsonHelper::class, $jsonHelper);
 
@@ -44,6 +46,11 @@ class GetPostsTest extends TestCase
 
     }
 
+    /**
+     * Tests controller retrieving 50 posts from source, with 4 with invalid data.
+     *
+     * @return void
+     */
     public function test_get_posts_with_invalid()
     {
         $max = (int)config('app.max_posts');
@@ -67,7 +74,7 @@ class GetPostsTest extends TestCase
 
 
         $jsonHelper = \Mockery::mock(JsonHelper::class);
-        $jsonHelper->shouldReceive('getJsonFromSource')
+        $jsonHelper->shouldReceive('getJsonPostsFromSource')
             ->andReturn($posts_from_json);
         $this->app->forgetInstance(JsonHelper::class);
         $this->app->instance(JsonHelper::class, $jsonHelper);

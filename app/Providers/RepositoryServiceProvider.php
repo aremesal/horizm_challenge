@@ -15,6 +15,7 @@ use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Repositories\Contracts\SellerRepositoryInterface;
 use App\Repositories\Contracts\SeoRepositoryInterface;
 use App\Repositories\Contracts\ShopRepositoryInterface;
+use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Contracts\VariantRepositoryInterface;
 use App\Repositories\CountryRepository;
 use App\Repositories\CustomerRepository;
@@ -25,6 +26,7 @@ use App\Repositories\ProductRepository;
 use App\Repositories\SellerRepository;
 use App\Repositories\SeoRepository;
 use App\Repositories\ShopRepository;
+use App\Repositories\UserRepository;
 use App\Repositories\VariantRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -36,5 +38,6 @@ class RepositoryServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(PostRepositoryInterface::class, PostRepository::class);
+        $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
     }
 }

@@ -21,14 +21,17 @@ class PostController extends Controller
         $this->jsonHelper = $json_helper;
     }
 
+    /**
+     * Get all posts from source, validate and send them to repository. Return number of imported posts.
+     *
+     * @return false|int
+     */
     public function getPosts()
     {
         $cont = 0;
-        $posts = $this->jsonHelper->getJsonFromSource();
+        $posts = $this->jsonHelper->getJsonPostsFromSource();
 
         if($posts) {
-
-
             foreach ($posts as $post) {
                 $validator = Validator::make($post,[
                     'id'=>'required|int',
@@ -41,8 +44,6 @@ class PostController extends Controller
                     $this->postRepo->store($post);
                     $cont++;
                 }
-
-
             }
 
             return $cont;
@@ -50,8 +51,6 @@ class PostController extends Controller
             return false;
         }
     }
-
-
 
     /**
      * Display a listing of the resource.

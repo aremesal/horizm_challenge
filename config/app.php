@@ -238,5 +238,6 @@ return [
     // Horizm config
     'max_posts' => env('HORIZM_MAX_POSTS', 50),
     'json_posts_url' => env('HORIZM_POSTS_URL', 'https://jsonplaceholder.typicode.com/posts'),
+    'json_users_url' => env('HORIZM_USERS_URL', 'https://jsonplaceholder.typicode.com/users'),
 
 ];

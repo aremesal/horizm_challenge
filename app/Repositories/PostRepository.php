@@ -14,6 +14,12 @@ class PostRepository implements PostRepositoryInterface
         $this->post = $post;
     }
 
+    /**
+     * Stores a new post from an array of post data
+     *
+     * @param array $data
+     * @return mixed
+     */
     public function store(Array $data)
     {
         $post = Post::firstOrNew(['id' => $data['id']]);
@@ -22,10 +28,10 @@ class PostRepository implements PostRepositoryInterface
         $post->body = $data['body'];
 
         // Calculate rating
-        // Always calculate rating because the body can change
+        // Always (re)calculate rating because the body could have changed
         $rating = Post::calculateRating($data['title'], $data['body']);
 
-        // If is an new entity
+        // Only if it is a new entity insert all data
         if(!$post->exists) {
             $post->user_id = $data['userId'];
             $post->title = $data['title'];
@@ -35,5 +41,9 @@ class PostRepository implements PostRepositoryInterface
         $post->save();
 
         return $post;
+    }
+
+    public function user_ids_from_posts() {
+        return Post::groupBy('user_id')->pluck('user_id')->toArray();
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-interface PostRepositoryInterface
+interface UserRepositoryInterface
 {
     public function store(Array $data);
 }

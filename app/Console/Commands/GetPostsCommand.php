@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 use App\Repositories\Contracts\PostRepositoryInterface;
 use Illuminate\Console\Command;
 
@@ -39,14 +40,24 @@ class GetPostsCommand extends Command
      */
     public function handle()
     {
+        // Import Posts
         $postController = resolve(PostController::class);
         $result = $postController->getPosts();
 
-        if($result)
+        if($result !== false)
             $this->info('Got ' . $result . ' posts imported.');
         else
             $this->error('Could not import posts');
 
-        return 0;
+        // Import Users
+        $userController = resolve(UserController::class);
+        $result = $userController->getUsers();
+
+        if($result !== false)
+            $this->info('Got ' . $result . ' users imported.');
+        else
+            $this->error('Could not import users');
+
+        return true;
     }
 }
