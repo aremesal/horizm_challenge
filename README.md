@@ -22,7 +22,10 @@ A lo largo de estas instrucciones se usa http://127.0.0.1:8000 como la URL de la
 * `npm install && npm run dev` (o `npm run prod` para entorno de producción).
 * `php artisan migrate:fresh`
 
-## Uso
+Configurar el servidor web según el entorno donde se esté desplegando. Para desarrollo local se puede lanzar
+el servidor integrado de Laravel: `php artisan serve` que expondrá la aplicación en [http://127.0.0.1:8000](http://127.0.0.1:8000).
+
+## Uso de la aplicación
 ### Importar datos
 Para importar los posts y usuarios se puede usar un comando o una llamada API.
 
