@@ -24,11 +24,12 @@ class PostController extends Controller
     /**
      * Get all posts from source, validate and send them to repository. Return number of imported posts.
      *
-     * @return false|int
+     * @return false|array
      */
     public function getPosts()
     {
-        $cont = 0;
+        $new = 0;
+        $updated = 0;
         $posts = $this->jsonHelper->getJsonPostsFromSource();
 
         if($posts) {
@@ -41,12 +42,15 @@ class PostController extends Controller
                 ]);
 
                 if (!$validator->fails()) {
-                    $this->postRepo->store($post);
-                    $cont++;
+                    $post = $this->postRepo->store($post);
+                    if($post->wasRecentlyCreated)
+                        $new++;
+                    else
+                        $updated++;
                 }
             }
 
-            return $cont;
+            return ['new' => $new, 'updated' => $updated];
         } else {
             return false;
         }

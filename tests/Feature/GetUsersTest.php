@@ -11,11 +11,13 @@ use App\Repositories\PostRepository;
 use Database\Factories\PostFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 class GetUsersTest extends TestCase
 {
     use RefreshDatabase;
+    use WithFaker;
 
     /**
      * Tests controller retrieving 10 users from source.
@@ -41,7 +43,7 @@ class GetUsersTest extends TestCase
         $controller = resolve(UserController::class);
         $count = $controller->getUsers();
 
-        $this->assertEquals(3, $count);
+        $this->assertEquals(3, $count['new']+$count['exists']);
 
     }
 
@@ -53,7 +55,7 @@ class GetUsersTest extends TestCase
     public function test_get_users_with_invalid()
     {
         $users_from_json = User::factory()->count(10)->make()->toArray();
-
+   
         // Make some data invalid
         $users_from_json[2]['id'] = null;
         $users_from_json[3]['name'] = null;
@@ -63,7 +65,7 @@ class GetUsersTest extends TestCase
         // Mock repository: it has its own tests
         $repository = \Mockery::mock(PostRepository::class);
         $repository->shouldReceive('user_ids_from_posts')
-            ->andReturn([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            ->andReturn([1,2,3,4,5,6,7,8,9,10]);
         $this->app->instance(PostRepository::class, $repository);
 
         // Mock json call - I don't care if the source is online or not
@@ -75,7 +77,7 @@ class GetUsersTest extends TestCase
         $controller = resolve(UserController::class);
         $count = $controller->getUsers();
 
-        $this->assertEquals(6, $count);
+        $this->assertEquals(6, $count['new']+$count['exists']);
 
     }
 }

@@ -26,11 +26,12 @@ class UserController extends Controller
     /**
      * Get all users from source, filter users with posts, validate and send them to repository. Return number of imported users.
      *
-     * @return false|int
+     * @return false|array
      */
     public function getUsers()
     {
         $cont = 0;
+        $exists = 0;
         $users = $this->jsonHelper->getJsonUsersFromSource();
         $users_with_posts = $this->postRepo->user_ids_from_posts();
 
@@ -52,12 +53,15 @@ class UserController extends Controller
                 ]);
 
                 if (!$validator->fails()) {
-                    $this->userRepo->store($user);
-                    $cont++;
+                    $user = $this->userRepo->store($user);
+                    if($user->wasRecentlyCreated)
+                        $cont++;
+                    else
+                        $exists++;
                 }
             }
 
-            return $cont;
+            return ['new' => $cont, 'exists' => $exists];
         } else {
             return false;
         }

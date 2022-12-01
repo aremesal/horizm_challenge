@@ -18,8 +18,8 @@ class PostFactory extends Factory
     {
         return [
             'id' => $this->faker->unique()->numberBetween(1, 50),
-            'user_id' => $this->faker->numberBetween(1,15),
-            'userId' => $this->faker->numberBetween(1,15),
+            'user_id' => $this->faker->numberBetween(1,10),
+            'userId' => $this->faker->numberBetween(1,10),
             'body' => $this->faker->sentences(5, true),
             'title' => $this->faker->sentences(2, true),
             'rating' => $this->faker->randomNumber,

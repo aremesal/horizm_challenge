@@ -9,6 +9,7 @@ use App\Repositories\PostRepository;
 use Database\Factories\PostFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
 class GetPostsTest extends TestCase
@@ -22,15 +23,19 @@ class GetPostsTest extends TestCase
      */
     public function test_get_posts()
     {
+        Artisan::call('migrate');
+
         $max = (int)config('app.max_posts');
 
         $posts_from_json = Post::factory()->count($max)->make()->toArray();
+        $new_post = new Post();
+        $new_post->wasRecentlyCreated = true;
 
         // Mock repository: it has its own tests
         $repository = \Mockery::mock(PostRepository::class);
         $repository->shouldReceive('store')
             ->times($max)
-            ->andReturn(new Post());
+            ->andReturn($new_post);
         $this->app->instance(PostRepository::class, $repository);
 
         // Mock json call - I don't care if the source is online or not
@@ -42,7 +47,7 @@ class GetPostsTest extends TestCase
         $controller = resolve(PostController::class);
         $count = $controller->getPosts();
 
-        $this->assertEquals($max, $count);
+        $this->assertEquals($max, $count['new']);
 
     }
 
@@ -53,9 +58,12 @@ class GetPostsTest extends TestCase
      */
     public function test_get_posts_with_invalid()
     {
+
         $max = (int)config('app.max_posts');
 
         $posts_from_json = Post::factory()->count($max)->make()->toArray();
+        $new_post = new Post();
+        $new_post->wasRecentlyCreated = true;
 
         // Make some data invalid
         $posts_from_json[2]['userId'] = null;
@@ -69,7 +77,7 @@ class GetPostsTest extends TestCase
         $repository = \Mockery::mock(PostRepository::class);
         $repository->shouldReceive('store')
             ->times($max)
-            ->andReturn(new Post());
+            ->andReturn($new_post);
         $this->app->instance(PostRepository::class, $repository);
 
 
@@ -82,7 +90,7 @@ class GetPostsTest extends TestCase
         $controller = resolve(PostController::class);
         $count = $controller->getPosts();
 
-        $this->assertEquals($max, $count);
+        $this->assertEquals($max, $count['new']);
 
     }
 }
