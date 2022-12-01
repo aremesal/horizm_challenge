@@ -14,7 +14,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
-class GetUsersTest extends TestCase
+class ImportUsersTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;

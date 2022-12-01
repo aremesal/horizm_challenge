@@ -12,7 +12,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Artisan;
 use Tests\TestCase;
 
-class GetPostsTest extends TestCase
+class ImportPostsTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -23,8 +23,6 @@ class GetPostsTest extends TestCase
      */
     public function test_get_posts()
     {
-        Artisan::call('migrate');
-
         $max = (int)config('app.max_posts');
 
         $posts_from_json = Post::factory()->count($max)->make()->toArray();
