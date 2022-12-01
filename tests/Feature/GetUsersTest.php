@@ -55,7 +55,7 @@ class GetUsersTest extends TestCase
     public function test_get_users_with_invalid()
     {
         $users_from_json = User::factory()->count(10)->make()->toArray();
-   
+
         // Make some data invalid
         $users_from_json[2]['id'] = null;
         $users_from_json[3]['name'] = null;
