@@ -21,11 +21,25 @@ class User extends Model
         'city'
     ];
 
-    /*
+    /**
      * Get the posts for the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function posts()
     {
         return $this->hasMany(Post::class);
+    }
+
+    /**
+     * Gets the top post: post with max rating from the user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function topPost()
+    {
+        return $this->hasOne(Post::class)
+            ->selectRaw('user_id, id, title, body, max(rating) as rating')
+            ->groupBy('user_id');
     }
 }

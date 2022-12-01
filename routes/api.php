@@ -4,6 +4,7 @@ use App\Http\Controllers\PostsApiController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,5 +23,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::prefix('v1')->group(function() {
 
-    Route::get('/posts/import-with-users', [ApiController::class, 'update'])->name('import_data');
+    Route::get('/data/import-with-users', [ApiController::class, 'update'])->name('import_data');
+
+    Route::get('/posts/top', [PostController::class, 'top'])->name('show_top_posts');
+    Route::get('/posts/{post}', [PostController::class, 'show'])->name('show_post');
 });

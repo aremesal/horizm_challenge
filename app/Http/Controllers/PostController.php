@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\JsonHelper;
 use App\Models\Post;
+use App\Models\User;
 use App\Repositories\Contracts\AttributeRepositoryInterface;
 use App\Repositories\Contracts\PostRepositoryInterface;
 use Illuminate\Http\Request;
@@ -88,14 +89,46 @@ class PostController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Returns a JSON with post data.
      *
      * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show(Post $post)
+    public function show(Request $request, Post $post)
     {
-        //
+        $data = [];
+
+        $data['id'] = $post->id;
+        $data['title'] = $post->title;
+        $data['body'] = $post->body;
+        $data['user'] = $post->user->name;
+
+        return response()->json($data);
+    }
+
+    /**
+     * Returns a JSON with list of top posts for each user
+     *
+     * @param Request $request
+     * @param Post $post
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function top(Request $request, Post $post) {
+        $users = User::with('topPost')->get();
+        $data = [];
+
+        foreach ($users as $user) {
+            $data[] = [
+                'id'  => $user->topPost->id,
+                'title' => $user->topPost->title,
+                'body' => $user->topPost->body,
+                'rating' => $user->topPost->rating,
+                'name' => $user->name,
+                'user_id' => $user->id
+            ];
+        }
+
+        return response()->json($data);
     }
 
     /**

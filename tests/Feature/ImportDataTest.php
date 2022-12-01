@@ -20,7 +20,7 @@ class ImportDataTest extends TestCase
     {
         Artisan::call('migrate');
 
-        $response = $this->get('/api/v1/posts/import-with-users');
+        $response = $this->get('/api/v1/data/import-with-users');
 
         $response->assertStatus(200);
 
