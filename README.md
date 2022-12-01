@@ -16,10 +16,10 @@ A lo largo de estas instrucciones se usa http://127.0.0.1:8000 como la URL de la
 
 ### Despliegue
 
-* Copiar archivo de configuración: `cp .env.example .env` y ajustar los valores según sea necesario
+* Copiar archivo de configuración: `cp .env.example .env` y ajustar los valores según sea necesario.
 * Crear archivo de BDD si no existe: `sqlite storage/database/database.sqlite`
-* `composer install --optimize-autoloader --no-dev`
-* `npm install && npm run dev`
+* `composer install --optimize-autoloader` (añadir `--no-dev` para entorno de producción).
+* `npm install && npm run dev` (o `npm run prod` para entorno de producción).
 * `php artisan migrate:fresh`
 
 ## Uso
@@ -33,7 +33,7 @@ Al importar los datos el procedimiento es:
 
 #### Importar datos por comando
 
-`php arisan horizm:getposts`
+`php artisan horizm:getposts`
 
 El comando importa los posts, los usuarios relacionados, e informa del número total de importados.
 
