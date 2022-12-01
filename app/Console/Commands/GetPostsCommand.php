@@ -44,8 +44,8 @@ class GetPostsCommand extends Command
         $postController = resolve(PostController::class);
         $result = $postController->getPosts();
 
-        if($result !== false)
-            $this->info('Got ' . $result . ' posts imported.');
+        if(is_array($result))
+            $this->info('Importados ' . ((int)$result['new']+(int)$result['updated']) . ' posts.');
         else
             $this->error('Could not import posts');
 
@@ -53,8 +53,8 @@ class GetPostsCommand extends Command
         $userController = resolve(UserController::class);
         $result = $userController->getUsers();
 
-        if($result !== false)
-            $this->info('Got ' . $result . ' users imported.');
+        if(is_array($result))
+            $this->info('Importados ' . ((int)$result['new']+(int)$result['exists']) . ' usuarios.');
         else
             $this->error('Could not import users');
 

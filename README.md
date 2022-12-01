@@ -1,64 +1,62 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Horizm Backend Challenge
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Challenge de desarrollo backend con Laravel para Horizm.
 
-## About Laravel
+Álvaro Remesal Royo - 2022-12-02
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Instalación
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+A lo largo de estas instrucciones se usa http://127.0.0.1:8000 como la URL de la aplicación. Cambiar por la URL real donde se despliegue la aplicación.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Requisitos
 
-## Learning Laravel
+* PHP 7.4 o superior (inferior a 8.0)
+* Laravle 8.x
+* SQLite
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Despliegue
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* Copiar archivo de configuración: `cp .env.example .env` y ajustar los valores según sea necesario
+* Crear archivo de BDD si no existe: `sqlite storage/database/database.sqlite`
+* `composer install --optimize-autoloader --no-dev`
+* `npm install && npm run dev`
+* `php artisan migrate:fresh`
 
-## Laravel Sponsors
+## Uso
+### Importar datos
+Para importar los posts y usuarios se puede usar un comando o una llamada API.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+Al importar los datos el procedimiento es:
 
-### Premium Partners
+* Importa los primeros 50 (número configurable en .env) posts desde la fuente (configurable en .env). Si un post ya existía se actualiza el body y se vuelve a calcular el rating por si ha cambiado al cambiar el body.
+* Importa los usuarios desde la fuente (configurable en .env) e inserta en BDD los que tengan posts en la BDD. Si un usuario ya existe no se actualiza ningún dato.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+#### Importar datos por comando
 
-## Contributing
+`php arisan horizm:getposts`
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+El comando importa los posts, los usuarios relacionados, e informa del número total de importados.
 
-## Code of Conduct
+#### Importar datos por API
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Se debe hacer una llamada a [http://127.0.0.1:8000/api/v1/data/import-with-users](http://127.0.0.1:8000/api/v1/data/import-with-users). Se devuelve un JSON informando del número de posts importados
+y actualizados, y el número de usuarios importados y ya existentes.
 
-## Security Vulnerabilities
+### Peticiones a la API
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Se expone una API sencilla para realizar tres acciones básicas:
 
-## License
+* [Top posts](http://127.0.0.1:8000/api/v1/posts/top): devuelve un JSON con todos los usuarios y su post con mayor valoración.
+* [Post](http://127.0.0.1:8000/api/v1/posts/{id}): devuelve un JSON con toda la información del post solicitado y el nombre del usuario  propietario del post. Si el post no existe devuelve un 404.
+* [Usuarios](http://127.0.0.1:8000/api/v1/users): devuelve un JSON con todos los usuarios y sus posts, ordenados los usuarios por la media de valoración de sus posts.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Documentación de la API
+
+Se puede consultar la [documentación completa de la API](http://127.0.0.1:8000/docs).
+
+Se puede descargar la [colección de acciones para Postman](http://127.0.0.1:8000/docs.postman).
+
+### Tests
+
+Se han creado diversos test funcionales para garantizar el funcionamiento ante cambios de código.
+Para ejecutar los tests: `php artisan test`
