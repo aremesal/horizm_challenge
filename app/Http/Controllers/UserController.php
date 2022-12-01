@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\JsonHelper;
-use App\Http\Requests\StoreUserRequest;
-use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use App\Repositories\Contracts\PostRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -65,6 +65,48 @@ class UserController extends Controller
         } else {
             return false;
         }
+    }
+
+    /**
+     * Returns a list of all users with their posts, order by the average rating of user's posts
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function list(Request $request)
+    {
+        $data = [];
+
+        $users = User::withCount(['posts as posts_avg' => function($query) {
+            $query->select(DB::raw('avg(rating)'));
+        }])
+            ->orderByDesc('posts_avg')
+            ->get();
+
+        foreach ($users as $user) {
+
+            $posts = [];
+            foreach ($user->posts as $post) {
+                $posts[] = [
+                    'id' => $post->id,
+                    'title' => $post->title,
+                    'body' => $post->body,
+                    'rating' => $post->rating,
+                    'user_id' => $post->user_id
+                ];
+            }
+
+            $data[] = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'city' => $user->city,
+                'avg_rating' => $user->posts_avg,
+                'posts' => $posts
+            ];
+        }
+
+        return response()->json($data);
     }
 
     /**

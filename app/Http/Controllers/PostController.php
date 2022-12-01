@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Helpers\JsonHelper;
 use App\Models\Post;
 use App\Models\User;
-use App\Repositories\Contracts\AttributeRepositoryInterface;
 use App\Repositories\Contracts\PostRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;

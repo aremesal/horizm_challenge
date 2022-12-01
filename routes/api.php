@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,7 @@ Route::prefix('v1')->group(function() {
 
     Route::get('/data/import-with-users', [ApiController::class, 'update'])->name('import_data');
 
-    Route::get('/posts/top', [PostController::class, 'top'])->name('show_top_posts');
+    Route::get('/posts/top',    [PostController::class, 'top'])->name('show_top_posts');
     Route::get('/posts/{post}', [PostController::class, 'show'])->name('show_post');
+    Route::get('/users',        [UserController::class, 'list'])->name('list_users_with_posts');
 });

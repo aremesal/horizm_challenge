@@ -42,4 +42,11 @@ class User extends Model
             ->selectRaw('user_id, id, title, body, max(rating) as rating')
             ->groupBy('user_id');
     }
+
+    public function avgPosts()
+    {
+        return $this->hasMany(Post::class)
+            ->selectRaw('avg(rating) as rating')
+            ->groupBy('user_id');
+    }
 }
